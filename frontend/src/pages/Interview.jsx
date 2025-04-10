@@ -30,6 +30,8 @@ const Interview = () => {
   const [feedbackText, setFeedbackText] = useState("")
   const [feedbackScore, setFeedbackScore] = useState(5)
   const [submittingFeedback, setSubmittingFeedback] = useState(false)
+  const [connectionState, setConnectionState] = useState('disconnected')
+  const [connectionError, setConnectionError] = useState(null)
 
   const messagesEndRef = useRef(null)
   const localVideoRef = useRef(null)
@@ -114,6 +116,9 @@ const Interview = () => {
   useEffect(() => {
     const setupWebRTC = async () => {
       try {
+        setConnectionState('connecting')
+        setConnectionError(null)
+        
         // Join the room with the interview ID
         const localStream = await webrtcService.joinRoom(id)
 
@@ -125,10 +130,22 @@ const Interview = () => {
         webrtcService.onStream((stream, userId) => {
           if (remoteVideoRef.current) {
             remoteVideoRef.current.srcObject = stream
+            setConnectionState('connected')
           }
         })
+
+        // Monitor connection state changes
+        webrtcService.onConnectionStateChange((userId, state) => {
+          setConnectionState(state)
+          if (state === 'closed' || state === 'failed') {
+            setConnectionError('Connection lost. Attempting to reconnect...')
+          }
+        })
+
       } catch (error) {
         console.error("Error setting up WebRTC:", error)
+        setConnectionError('Failed to establish connection. Please check your camera and microphone permissions.')
+        setConnectionState('failed')
       }
     }
 
@@ -473,7 +490,24 @@ const Interview = () => {
                   </p>
                 </div>
                 <div className="flex-1 p-0 flex flex-col">
-                  <div className="relative flex-1 bg-slate-900 flex items-center justify-center">
+                  <div className="relative flex-1 bg-gray-900 flex items-center justify-center">
+                    <div className="absolute top-4 left-4 z-10">
+                      <div className={`px-3 py-1 rounded-full text-sm ${
+                        connectionState === 'connected' ? 'bg-green-500' :
+                        connectionState === 'connecting' ? 'bg-yellow-500' :
+                        connectionState === 'failed' ? 'bg-red-500' :
+                        'bg-gray-500'
+                      } text-white`}>
+                        {connectionState.charAt(0).toUpperCase() + connectionState.slice(1)}
+                      </div>
+                    </div>
+
+                    {connectionError && (
+                      <div className="absolute top-12 left-4 z-10 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                        {connectionError}
+                      </div>
+                    )}
+
                     <video ref={remoteVideoRef} autoPlay playsInline className="w-full h-full object-cover" />
 
                     {!remoteVideoRef.current?.srcObject && (
@@ -783,4 +817,3 @@ const Interview = () => {
 }
 
 export default Interview
-

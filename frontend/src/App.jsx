@@ -1,68 +1,75 @@
-import React from "react"
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"
-import { AuthProvider, AuthContext } from "./contexts/AuthContext" // Import AuthContext from the context file
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { AuthProvider, AuthContext } from "./contexts/AuthContext";
 
 // Pages
-import HomePage from "./pages/HomePage"
-import LoginPage from "./pages/LoginPage"
-import RegisterPage from "./pages/RegisterPage"
-import DashboardPage from "./pages/DashboardPage"
-import ProfilePage from "./pages/ProfilePage"
-import SettingsPage from "./pages/SettingsPage"
-import SchedulePage from "./pages/SchedulePage"
-import NotFoundPage from "./pages/NotFoundPage"
-import InterviewerPage from "./pages/InterviewerPage"
-import InterviewPage from "./pages/InterviewPage"
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import DashboardPage from "./pages/DashboardPage";
+import ProfilePage from "./pages/ProfilePage";
+import SettingsPage from "./pages/SettingsPage";
+import SchedulePage from "./pages/SchedulePage";
+import NotFoundPage from "./pages/NotFoundPage";
+import InterviewPage from "./pages/InterviewPage1";
+import CandidateInterviewPage from "./pages/CandidateInterviewPage";
+import InterviewerPage from "./pages/InterviewerPage";
 
-// Protected Route Component
+// Components
+import InterviewerView from "./components/InterviewerView";
+import CandidateView from "./components/CandidateView";
+import InterviewerDashboard from "./components/InterviewerDashboard";
+
+// ✅ Protected Route Component
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, loading } = React.useContext(AuthContext)
+  const { isAuthenticated, loading } = React.useContext(AuthContext);
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
       </div>
-    )
+    );
   }
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" />
-  }
+  return isAuthenticated ? children : <Navigate to="/login" />;
+};
 
-  return children
-}
-
-// Role-based Route Component
+// ✅ Role-based Route Component
 const RoleRoute = ({ roles, children }) => {
-  const { user, loading } = React.useContext(AuthContext)
+  const { user, loading } = React.useContext(AuthContext);
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
       </div>
-    )
+    );
   }
 
-  if (!user || !roles.includes(user.role)) {
-    return <Navigate to="/dashboard" />
-  }
-
-  return children
-}
+  return user && roles.includes(user.role) ? (
+    children
+  ) : (
+    <Navigate to="/dashboard" />
+  );
+};
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <Routes>
-          {/* Public Routes */}
+          {/* 🌐 Public Routes */}
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
 
-          {/* Protected Routes */}
+          {/* 🔒 Protected Routes */}
           <Route
             path="/dashboard"
             element={
@@ -71,7 +78,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/schedule"
             element={
@@ -80,7 +86,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/profile"
             element={
@@ -89,7 +94,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/settings"
             element={
@@ -98,34 +102,69 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
-            path="/interview/:id"
+            path="/interview"
             element={
               <ProtectedRoute>
                 <InterviewPage />
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/interview/candidate"
+            element={
+              <ProtectedRoute>
+                <CandidateView roomId={1234} />
+              </ProtectedRoute>
+            }
+          />
 
+          {/* 🎯 Role-Based Routes */}
           <Route
             path="/interviewer"
             element={
               <ProtectedRoute>
                 <RoleRoute roles={["interviewer", "admin"]}>
-                  <InterviewerPage />
+                  <InterviewerView roomId={1234} />
+                </RoleRoute>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/interviewer-dashboard"
+            element={
+              <ProtectedRoute>
+                <RoleRoute roles={["interviewer", "admin"]}>
+                  <InterviewerDashboard />
                 </RoleRoute>
               </ProtectedRoute>
             }
           />
 
+          {/* 🧑‍💻 Dynamic Routes for Interviews */}
+          <Route
+            path="/interview/:roomId"
+            element={
+              <ProtectedRoute allowedRoles={['interviewer', 'candidate']}>
+                <InterviewPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/host/:roomId"
+            element={
+              <ProtectedRoute>
+                <InterviewPage isInterviewer={true} />
+              </ProtectedRoute>
+            }
+          />
 
-          {/* 404 Route */}
+          {/* ❌ 404 Route */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Router>
     </AuthProvider>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -74,7 +74,7 @@ const DashboardPage = () => {
     }, 60000)
 
     return () => clearInterval(timeInterval)
-  }, [user.id])
+  })
 
   // Function to check if an interview is within 5 minutes of starting
   const isInterviewActive = (startTime, date) => {

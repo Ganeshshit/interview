@@ -1,8 +1,8 @@
-
-import { createContext, useState, useEffect } from "react"
+import React from 'react'
+import { createContext, useState, useEffect } from 'react'
 import api from "../services/api.js"
 
-export const AuthContext = createContext()
+export const AuthContext = React.createContext()
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)

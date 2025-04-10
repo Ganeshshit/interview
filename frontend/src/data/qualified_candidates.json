@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "name": "John Doe",
+        "email": "shitganesh4@gmail.com"
+    },
+    {
+        "id": 2,
+        "name": "Jane Smith",
+        "email": "gsb021@nist.edu"
+    },
+    {
+        "id": 3,
+        "name": "Michael Johnson",
+        "email": "gshit2003@gmail.com"
+    },
+    {
+        "id": 4,
+        "name": "Emily Davis",
+        "email": "shitganesh4@gmail.com"
+    },
+    {
+        "id": 5,
+        "name": "Chris Brown",
+        "email": "gsb021@nist.edu"
+    },
+    {
+        "id": 6,
+        "name": "Sarah Wilson",
+        "email": "gshit2003@gmail.com"
+    },
+    {
+        "id": 7,
+        "name": "David Martinez",
+        "email": "shitganesh4@gmail.com"
+    },
+    {
+        "id": 8,
+        "name": "Laura Taylor",
+        "email": "gsb021@nist.edu"
+    },
+    {
+        "id": 9,
+        "name": "James Anderson",
+        "email": "gshit2003@gmail.com"
+    },
+    {
+        "id": 10,
+        "name": "Olivia Thomas",
+        "email": "shitganesh4@gmail.com"
+    },
+    {
+        "id": 11,
+        "name": "Robert Lee",
+        "email": "gsb021@nist.edu"
+    },
+    {
+        "id": 12,
+        "name": "Sophia Harris",
+        "email": "gshit2003@gmail.com"
+    }
+]

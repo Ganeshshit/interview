@@ -10,16 +10,16 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [formData, setFormData] = useState({
-    skills: "",
-    experience: "",
-    field_of_interest: "",
-    expertise_level: "",
-    bio: "",
-    phone: "",
-    location: "",
-    github_url: "",
-    linkedin_url: "",
-    website: "",
+    skills: ""||"JavaScript, React, Node.js",
+    experience: ""||"2 years of experience",
+    field_of_interest: ""||"Frontend Development",
+    expertise_level: ""||"mid",
+    bio: ""||"I'm a software engineer with a passion for building web applications.",
+    phone: ""||"123-456-7890",
+    location: ""||"San Francisco, CA",
+    github_url: ""||"github.com/ganeshshit",
+    linkedin_url: ""||"linkedin.com/in/ganeshshit",
+    website: ""||"ganeshshit.com",
   })
   const [resume, setResume] = useState(null)
   const [message, setMessage] = useState({ type: "", text: "" })
@@ -145,7 +145,7 @@ const ProfilePage = () => {
                   <input
                     type="text"
                     id="name"
-                    value={user?.name || ""}
+                    value={user?.name || "Ganesh Shit"}
                     disabled
                     className="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
                   />
@@ -161,7 +161,7 @@ const ProfilePage = () => {
                   <input
                     type="email"
                     id="email"
-                    value={user?.email || ""}
+                    value={user?.email || "shitganesh4@gmail.com"}
                     disabled
                     className="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
                   />
